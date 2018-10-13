@@ -21,16 +21,16 @@ sentences_train_y = to_categorical(np.asarray(dataframe_train['Sentiment']))
 sentences_test_x = np.asarray(dataframe_test['Phrase'])
 #sentences_test_y = np.asarray(dataframe_test['Sentiment'])
 
-sentences_x = np.concatenate((sentences_train, sentences_test) , axis = 0)
+sentences_x = np.concatenate((sentences_train_x, sentences_test_x) , axis = 0)
 t = Tokenizer()
-t.fit_on_texts(sentences)
+t.fit_on_texts(sentences_x)
 
 #print(t.word_index)
 vocab_length = len(t.word_index)+1
 
 glove_lookup = {}
-encoded_texts_train = t.texts_to_sequences(sentences_train)
-encoded_texts_test = t.texts_to_sequences(sentences_test)
+encoded_texts_train = t.texts_to_sequences(sentences_train_x)
+encoded_texts_test = t.texts_to_sequences(sentences_test_x)
 # pad documents to a max length of 4 words
 max_length = 20
 padded_texts_train = pad_sequences(encoded_texts_train, maxlen=max_length, padding='post')
@@ -64,7 +64,7 @@ model.add(Dense(5, activation = 'softmax'))
 
 model.compile(optimizer = 'adam' , loss = 'binary_crossentropy' , metrics = ['acc'])
 
-model.fit( padded_texts_train,sentences_train_y , epochs = 100, verbose = 2)
+model.fit( padded_texts_train,sentences_train_y , epochs = 4, verbose = 2)
 
 loss,accuracy = model.evaluate(padded_texts_train, sentences_train_y, verbose = 0)
 
