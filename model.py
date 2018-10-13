@@ -32,7 +32,7 @@ glove_lookup = {}
 encoded_texts_train = t.texts_to_sequences(sentences_train_x)
 encoded_texts_test = t.texts_to_sequences(sentences_test_x)
 # pad documents to a max length of 4 words
-max_length = 20
+max_length = 10
 padded_texts_train = pad_sequences(encoded_texts_train, maxlen=max_length, padding='post')
 padded_texts_test = pad_sequences(encoded_texts_test, maxlen=max_length, padding='post')
 #print(padded_texts_train)
@@ -64,9 +64,11 @@ model.add(Dense(5, activation = 'softmax'))
 
 model.compile(optimizer = 'adam' , loss = 'binary_crossentropy' , metrics = ['acc'])
 
-model.fit( padded_texts_train,sentences_train_y , epochs = 4, verbose = 2)
+model.fit( padded_texts_train,sentences_train_y , epochs = 100, verbose = 2)
 
 loss,accuracy = model.evaluate(padded_texts_train, sentences_train_y, verbose = 0)
+
+model.save('sentimentclassification.h5')
 
 output_test = np.argmax(model.predict(padded_texts_test),axis = 1)
 
